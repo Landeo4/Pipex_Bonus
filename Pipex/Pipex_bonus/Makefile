@@ -6,11 +6,11 @@
 #    By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/10 16:41:59 by tpotilli          #+#    #+#              #
-#    Updated: 2023/10/18 14:27:55 by tpotilli         ###   ########.fr        #
+#    Updated: 2023/10/18 17:53:51 by tpotilli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME	=	Pipex
+NAME	=	Pipex_bonus
 
 SRCS	=	srcs/main.c\
 			srcs/pipex_bonus.c\
