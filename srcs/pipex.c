@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/04 09:28:48 by tpotilli          #+#    #+#             */
-/*   Updated: 2023/11/21 08:55:10 by tpotilli         ###   ########.fr       */
+/*   Created: 2023/11/21 13:41:43 by tpotilli          #+#    #+#             */
+/*   Updated: 2023/11/21 14:45:06 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,15 +41,24 @@ int	ft_pipex(char *argv[], char *envp[])
 {
 	pid_t		pid[2];
 	t_pipes		*fd_pipes;
-	int			status;
 	int			i;
 	int			nb_pipes;
 
+	printf("au debut de pipex\n");
+	fd_pipex->cpt_intput = 0;
+	fd_pipex->cot_output = 0;
 	nb_pipes = get_nb_pipes(argv);
 	fd_pipes = malloc(sizeof(t_pipes) * nb_pipes);
 	i = 0;
-	if (pipe(fd_pipes->pipes) < 0)
-		return (perror("pipes"), 1);
+	printf("juste avant les pipes\n");
+	while (i < nb_pipes)
+	{
+		if (pipe(fd_pipes->pipes) < 0)
+			return (perror("pipes"), 1);
+		i++;
+	}
+	i = 0;
+	printf("je passe par la\n");
 	while (i < nb_pipes)
 	{
 		pid[i] = fork();
@@ -64,9 +73,25 @@ int	ft_pipex(char *argv[], char *envp[])
 		}
 		i++;
 	}
+	printf("fin du code\n");
 	close_all_pipe(fd_pipes, nb_pipes);
-	return (waitpid(pid[1], &status, 0)
-		, waitpid(pid[0], &status, 0), 0);
+	close_all_pid(nb_pipes, pid);
+	return (0);
+}
+
+void	close_all_pid(int nb_pipes, pid_t *pid)
+{
+	int			i;
+	int			status;
+
+	i = 0;
+	while (i < nb_pipes)
+	{
+		waitpid(pid[0], &status, 0);
+		waitpid(pid[1], &status, 0);
+		i++;
+	}
+	
 }
 
 void	close_all_pipe(t_pipes *fd_pipes, int nb_pipes)

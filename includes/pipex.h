@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/10 16:39:00 by tpotilli          #+#    #+#             */
-/*   Updated: 2023/11/21 08:54:38 by tpotilli         ###   ########.fr       */
+/*   Updated: 2023/11/21 14:44:28 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@
 typedef struct s_fd_pipes
 {
 	int		pipes[2];
+	int		cpt_output;
+	int		cpt_input;
 }	t_pipes;
 
 // =======================================================================
@@ -92,5 +94,6 @@ void	child_process_start(char *argv[], char *envp[], int *end);
 void	child_process_end(char *argv[], char *envp[], int *end);
 int		get_nb_pipes(char **argv);
 void	close_all_pipe(t_pipes *fd_pipes, int nb_pipes);
+void	close_all_pid(int nb_pipes, pid_t *pid);
 
 #endif
