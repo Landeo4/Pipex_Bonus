@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 09:28:48 by tpotilli          #+#    #+#             */
-/*   Updated: 2023/10/18 14:06:41 by tpotilli         ###   ########.fr       */
+/*   Updated: 2023/11/21 08:55:10 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,30 +37,46 @@
 ** waitpid() wait the end of parent to wait child
 */
 
-int	ft_pipex(int fd1, int fd2, char *argv[], char *envp[])
+int	ft_pipex(char *argv[], char *envp[])
 {
-	pid_t	pid;
-	int		end[2];
-	int		status;
-	int		i;
+	pid_t		pid[2];
+	t_pipes		*fd_pipes;
+	int			status;
+	int			i;
+	int			nb_pipes;
 
-	i = count_len_db(argv) - 1;
-	while (i > 0)
+	nb_pipes = get_nb_pipes(argv);
+	fd_pipes = malloc(sizeof(t_pipes) * nb_pipes);
+	i = 0;
+	if (pipe(fd_pipes->pipes) < 0)
+		return (perror("pipes"), 1);
+	while (i < nb_pipes)
 	{
-		pipe(end);
-		pid = fork();
-		if (pid < 0)
+		pid[i] = fork();
+		if (pid[i] < 0)
 			return (1);
-		else if (pid == 0)
-			child_process(fd1, argv, envp, end);
-		else
-			parent_process(fd2, argv, envp, end);
-		i--;
+		if (pid[i] == 0)
+		{
+			if (i > 0)
+				child_process_start(argv, envp, fd_pipes->pipes);
+			else
+				child_process_end(argv, envp, fd_pipes->pipes);
+		}
+		i++;
 	}
-	close(end[0]);
-	close(end[1]);
-	waitpid(pid, &status, 0);
-	return (0);
+	close_all_pipe(fd_pipes, nb_pipes);
+	return (waitpid(pid[1], &status, 0)
+		, waitpid(pid[0], &status, 0), 0);
+}
+
+void	close_all_pipe(t_pipes *fd_pipes, int nb_pipes)
+{
+	while (nb_pipes > 0)
+	{
+		close(fd_pipes->pipes[0]);
+		close(fd_pipes->pipes[1]);
+		nb_pipes--;
+	}
 }
 
 //end[1] == child process ->write

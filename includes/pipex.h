@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/10 16:39:00 by tpotilli          #+#    #+#             */
-/*   Updated: 2023/10/18 14:03:28 by tpotilli         ###   ########.fr       */
+/*   Updated: 2023/11/21 08:54:38 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,17 @@
 # include <sys/wait.h>
 # include <unistd.h>
 # include <signal.h>
+# include <errno.h>
+
+
+// =======================================================================
+//								Struct
+// =======================================================================
+
+typedef struct s_fd_pipes
+{
+	int		pipes[2];
+}	t_pipes;
 
 // =======================================================================
 //								Libft
@@ -64,9 +75,8 @@ char	*ft_strjoin(char *s1, char *s2);
 
 int		ft_parsing(int argc);
 int		ft_verif_error(char *buff, int fd[]);
-int		ft_pipex(int fd1, int fd2, char *argv[], char *envp[]);
+int		ft_pipex(char *argv[], char *envp[]);
 int		ft_create_fd(char *argv, int flag);
-void	child_process(int fd1, char *argv[], char *envp[], int *end);
 void	parent_process(int fd4, char *argv[], char *envp[], int *end);
 char	*ft_get_pass(char *argv, char *envp, int i);
 void	ft_do_process(char *envp[], char *cmd);
@@ -78,6 +88,9 @@ char	**ft_get_path(char **env);
 char	*ft_strchr(const char *string, int searchedChar);
 int		not_Path(const char *s1, const char *s2);
 char	*str_join_free(char *path, char *cmd);
-int		count_len_db(char *argv[]);
+void	child_process_start(char *argv[], char *envp[], int *end);
+void	child_process_end(char *argv[], char *envp[], int *end);
+int		get_nb_pipes(char **argv);
+void	close_all_pipe(t_pipes *fd_pipes, int nb_pipes);
 
 #endif
