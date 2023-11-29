@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tpotilli <theo91.pot@gmail.com>            +#+  +:+       +#+        */
+/*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/12 13:16:37 by tpotillion        #+#    #+#             */
-/*   Updated: 2023/07/26 22:51:25 by tpotilli         ###   ########.fr       */
+/*   Updated: 2023/11/29 10:41:32 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-size_t	ft_strlen(const char *s)
+int		ft_strlen(char *s)
 {
 	int	i;
 
@@ -22,4 +22,14 @@ size_t	ft_strlen(const char *s)
 		i++;
 	}
 	return (i);
+}
+
+int		ft_strlen_db(char **s, int i)
+{
+	int	j;
+
+	j = 0;
+	while (s[i][j])
+		j++;
+	return (j);
 }

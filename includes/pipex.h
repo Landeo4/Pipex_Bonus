@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/10 16:39:00 by tpotilli          #+#    #+#             */
-/*   Updated: 2023/11/21 14:44:28 by tpotilli         ###   ########.fr       */
+/*   Updated: 2023/11/29 11:01:23 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,15 @@
 # define WHITE "\001\033[1;37m\002"
 # define RESET "\001\033[0m\002"
 
+typedef struct s_pipes
+{
+    char	**argv;
+    char	**env;
+    int		pipes[2];
+    char	*fd1;
+    char	*fd2;
+}   t_pipes;
+
 // =======================================================================
 //								Include
 // =======================================================================
@@ -41,18 +50,6 @@
 # include <signal.h>
 # include <errno.h>
 
-
-// =======================================================================
-//								Struct
-// =======================================================================
-
-typedef struct s_fd_pipes
-{
-	int		pipes[2];
-	int		cpt_output;
-	int		cpt_input;
-}	t_pipes;
-
 // =======================================================================
 //								Libft
 // =======================================================================
@@ -62,7 +59,7 @@ char	**ft_free(char **split, int index_word);
 int		ft_word(char const *s, char c);
 char	**ft_copy(char const *s, char c, char **split, int i);
 char	**ft_split(char const *s, char c);
-size_t	ft_strlen(const char *s);
+int		ft_strlen(char *s);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 char	*ft_strnstr(const char *big, const char *little, size_t len);
 int		ft_check(char const *s, size_t len, unsigned int start);
@@ -70,6 +67,8 @@ char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strdup(const char *s);
 char	*ft_cpy(char const *s1, char const *s2, char *str);
 char	*ft_strjoin(char *s1, char *s2);
+int		ft_strlen_db(char **s, int i);
+void	free_db_tab(char **str);
 
 // =======================================================================
 //								Pipex
@@ -77,7 +76,7 @@ char	*ft_strjoin(char *s1, char *s2);
 
 int		ft_parsing(int argc);
 int		ft_verif_error(char *buff, int fd[]);
-int		ft_pipex(char *argv[], char *envp[]);
+int		ft_pipex(t_pipes *pipes);
 int		ft_create_fd(char *argv, int flag);
 void	parent_process(int fd4, char *argv[], char *envp[], int *end);
 char	*ft_get_pass(char *argv, char *envp, int i);
@@ -90,10 +89,10 @@ char	**ft_get_path(char **env);
 char	*ft_strchr(const char *string, int searchedChar);
 int		not_Path(const char *s1, const char *s2);
 char	*str_join_free(char *path, char *cmd);
-void	child_process_start(char *argv[], char *envp[], int *end);
-void	child_process_end(char *argv[], char *envp[], int *end);
+void	child_process_start(t_pipes *pipes);
+void	child_process_end(t_pipes *pipes);
 int		get_nb_pipes(char **argv);
-void	close_all_pipe(t_pipes *fd_pipes, int nb_pipes);
-void	close_all_pid(int nb_pipes, pid_t *pid);
+int		cpy_arg(t_pipes *pipes, char *new[]);
+int		cpy_env(t_pipes *pipes, char *new[]);
 
 #endif

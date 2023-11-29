@@ -6,7 +6,7 @@
 #    By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/10 16:41:59 by tpotilli          #+#    #+#              #
-#    Updated: 2023/11/21 08:56:34 by tpotilli         ###   ########.fr        #
+#    Updated: 2023/11/07 15:36:26 by tpotilli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,6 @@ SRCS	=	srcs/main.c\
 			srcs/ft_create_and_verify.c\
 			srcs/ft_child_process.c\
 			srcs/execute.c\
-			srcs/get_nb_pipes.c\
 			libft/ft_split.c\
 			libft/ft_strlen.c\
 			libft/ft_strnstr.c\

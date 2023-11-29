@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 23:14:04 by tpotilli          #+#    #+#             */
-/*   Updated: 2023/11/14 10:41:39 by tpotilli         ###   ########.fr       */
+/*   Updated: 2023/11/05 10:06:24 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,10 @@ int	ft_create_fd(char *argv, int flag)
 
 int	ft_parsing(int argc)
 {
-	if (argc < 5)
+	if (argc != 5)
 	{
 		write(2, "error invalid arguments\n", 25);
-		write(2, "at least: ./pipex infile cmd1 cmd2 outfile\n", 34);
+		write(2, "./pipex infile cmd1 cmd2 outfile\n", 34);
 		return (1);
 	}
 	return (0);

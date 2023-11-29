@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/21 13:41:43 by tpotilli          #+#    #+#             */
-/*   Updated: 2023/11/21 14:45:06 by tpotilli         ###   ########.fr       */
+/*   Created: 2023/10/04 09:28:48 by tpotilli          #+#    #+#             */
+/*   Updated: 2023/11/29 10:31:45 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,71 +37,58 @@
 ** waitpid() wait the end of parent to wait child
 */
 
-int	ft_pipex(char *argv[], char *envp[])
+// int	ft_pipex(t_pipes *pipes)
+// {
+// 	pid_t	pid[2];
+// 	// int		end[get_nb_pipes(argv)];
+// 	int		status;
+// 	int		i;
+// 	int		nb;
+
+// 	nb = get_nb_pipes(argv);
+// 	pipes = malloc(sizeof(pipes) * nb);
+// 	if (!pipes)
+//     	return (-1);
+// 	i = 0;
+// 	while (i < nb)
+// 	{
+// 		if (pipe(pipes[i].pipes) == -1)
+// 		{
+// 			free(pipes);
+// 			return (-1);
+// 		}
+// 		i++;
+// 	}
+// 	i = 0;
+// 	while (i < nb)
+// 	{
+// 		pid[i] = fork();
+// 		if (pid[i] < 0)
+// 			return (1);
+// 		if (pid[i] == 0)
+// 		{
+// 			if (i == 0)
+// 				child_process_start(pipes, );
+// 			else
+// 				child_process_end(pipes, );
+// 		}
+// 		i++;
+// 	}
+// 	return (close(pipes->pipes[0]), close(pipes->pipes[1]), waitpid(pid[1], &status, 0)
+// 		, waitpid(pid[0], &status, 0), 0);
+// }
+
+int		get_nb_pipes(char **argv)
 {
-	pid_t		pid[2];
-	t_pipes		*fd_pipes;
-	int			i;
-	int			nb_pipes;
-
-	printf("au debut de pipex\n");
-	fd_pipex->cpt_intput = 0;
-	fd_pipex->cot_output = 0;
-	nb_pipes = get_nb_pipes(argv);
-	fd_pipes = malloc(sizeof(t_pipes) * nb_pipes);
-	i = 0;
-	printf("juste avant les pipes\n");
-	while (i < nb_pipes)
-	{
-		if (pipe(fd_pipes->pipes) < 0)
-			return (perror("pipes"), 1);
-		i++;
-	}
-	i = 0;
-	printf("je passe par la\n");
-	while (i < nb_pipes)
-	{
-		pid[i] = fork();
-		if (pid[i] < 0)
-			return (1);
-		if (pid[i] == 0)
-		{
-			if (i > 0)
-				child_process_start(argv, envp, fd_pipes->pipes);
-			else
-				child_process_end(argv, envp, fd_pipes->pipes);
-		}
-		i++;
-	}
-	printf("fin du code\n");
-	close_all_pipe(fd_pipes, nb_pipes);
-	close_all_pid(nb_pipes, pid);
-	return (0);
-}
-
-void	close_all_pid(int nb_pipes, pid_t *pid)
-{
-	int			i;
-	int			status;
+	int		i;
+	int		nb;
 
 	i = 0;
-	while (i < nb_pipes)
-	{
-		waitpid(pid[0], &status, 0);
-		waitpid(pid[1], &status, 0);
+	while (argv[i])
 		i++;
-	}
-	
-}
-
-void	close_all_pipe(t_pipes *fd_pipes, int nb_pipes)
-{
-	while (nb_pipes > 0)
-	{
-		close(fd_pipes->pipes[0]);
-		close(fd_pipes->pipes[1]);
-		nb_pipes--;
-	}
+	nb = i / 2;
+	nb--;
+	return (nb);
 }
 
 //end[1] == child process ->write
