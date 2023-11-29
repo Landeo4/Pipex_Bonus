@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 07:37:57 by tpotilli          #+#    #+#             */
-/*   Updated: 2023/10/05 07:42:52 by tpotilli         ###   ########.fr       */
+/*   Updated: 2023/11/29 12:07:08 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 **	The new string will have a new first characters because of start
 */
 
+
 int	ft_check(char const *s, size_t len, unsigned int start)
 {
 	size_t	i;
@@ -39,10 +40,10 @@ int	ft_check(char const *s, size_t len, unsigned int start)
 	return (i);
 }
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+char	*ft_substr(char *s, int start, int len)
 {
 	char	*string;
-	size_t	i;
+	int		i;
 
 	i = 0;
 	if (!s)

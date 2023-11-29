@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 15:58:51 by tpotilli          #+#    #+#             */
-/*   Updated: 2023/11/29 10:31:55 by tpotilli         ###   ########.fr       */
+/*   Updated: 2023/11/29 12:55:02 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,39 +26,39 @@
 ** 
 */
 
-// void	child_process_start(t_pipes *pipes)
-// {
-// 	int	fd;
+void	child_process_start(t_pipes *pipes, int i)
+{
+	int	fd;
 
-// 	close(t_pipes->pipes[0]);
-// 	fd = ft_create_fd(file_in, O_RDONLY); // trouver nom fichier argv[4]
-// 	if (fd < 0)
-// 		return (close(t_pipes->pipes[1]), exit(errno));
-// 	if (dup2(fd, STDIN_FILENO) < 0)
-// 		return (t_pipes->pipes[1], close(fd), perror("dup2"), exit(errno));
-// 	close(fd);
-// 	if (dup2(t_pipes->pipes[1], STDOUT_FILENO) < 0)
-// 		return (t_pipes->pipes[1], perror("dup2"), exit(errno));
-// 	close(t_pipes->pipes[1]);
-// 	ft_do_process(t_pipes->envp, t_pipes->argv[2]); // trouver commande (2)
-// }
+	close(pipes->pipes[0]);
+	fd = ft_create_fd(pipes[i].fd1, O_RDONLY); // trouver nom fichier argv[4]
+	if (fd < 0)
+		return (close(pipes->pipes[1]), exit(errno));
+	if (dup2(fd, STDIN_FILENO) < 0)
+		return (close(pipes->pipes[1]), close(fd), perror("dup2"), exit(errno));
+	close(fd);
+	if (dup2(pipes->pipes[1], STDOUT_FILENO) < 0)
+		return (close(pipes->pipes[1]), perror("dup2"), exit(errno));
+	close(pipes->pipes[1]);
+	ft_do_process(pipes->env, pipes->argv[2]); // trouver commande (2)
+}
 
-// void	child_process_end(t_pipes *pipes)
-// {
-// 	int		fd;
+void	child_process_end(t_pipes *pipes, int i)
+{
+	int		fd;
 
-// 	close (t_pipes->pipes[1]);
-// 	if (dup2(end[0], STDIN_FILENO) < 0)
-// 		return (t_pipes->pipes[0], perror("dup2"), exit(errno));
-// 	close(end[0]);
-// 	fd = ft_create_fd(file_out, O_WRONLY | O_CREAT | O_TRUNC); // trouver le fichier argv[4]
-// 	if (fd < 0)
-// 		return (exit(errno));
-// 	if (dup2(fd, STDOUT_FILENO) < 0)
-// 		return (t_pipes->pipes[0], close(fd), perror("dup2"), exit(errno));
-// 	close (fd);
-// 	ft_do_process(envp, argv[3]); // trouver la commande (3)
-// }
+	close (pipes->pipes[1]);
+	if (dup2(pipes[i].pipes[0], STDIN_FILENO) < 0)
+		return (close(pipes->pipes[0]), perror("dup2"), exit(errno));
+	close(pipes[i].pipes[0]);
+	fd = ft_create_fd(pipes[i].fd2, O_WRONLY | O_CREAT | O_TRUNC); // trouver le fichier argv[4]
+	if (fd < 0)
+		return (exit(errno));
+	if (dup2(fd, STDOUT_FILENO) < 0)
+		return (close(pipes->pipes[0]), close(fd), perror("dup2"), exit(errno));
+	close (fd);
+	ft_do_process(pipes->env, pipes->argv[3]); // trouver la commande (3)
+}
 
 // void	ft_close(int *fd)
 // {

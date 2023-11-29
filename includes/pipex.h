@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/10 16:39:00 by tpotilli          #+#    #+#             */
-/*   Updated: 2023/11/29 11:01:23 by tpotilli         ###   ########.fr       */
+/*   Updated: 2023/11/29 13:16:24 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,8 @@ int		ft_strlen(char *s);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 char	*ft_strnstr(const char *big, const char *little, size_t len);
 int		ft_check(char const *s, size_t len, unsigned int start);
-char	*ft_substr(char const *s, unsigned int start, size_t len);
-char	*ft_strdup(const char *s);
+char	*ft_substr(char *s, int start, int len);
+char	*ft_strdup(char *s);
 char	*ft_cpy(char const *s1, char const *s2, char *str);
 char	*ft_strjoin(char *s1, char *s2);
 int		ft_strlen_db(char **s, int i);
@@ -89,10 +89,11 @@ char	**ft_get_path(char **env);
 char	*ft_strchr(const char *string, int searchedChar);
 int		not_Path(const char *s1, const char *s2);
 char	*str_join_free(char *path, char *cmd);
-void	child_process_start(t_pipes *pipes);
-void	child_process_end(t_pipes *pipes);
+void	child_process_start(t_pipes *pipes, int i);
+void	child_process_end(t_pipes *pipes, int i);
 int		get_nb_pipes(char **argv);
 int		cpy_arg(t_pipes *pipes, char *new[]);
 int		cpy_env(t_pipes *pipes, char *new[]);
+t_pipes *init_pipes(char *argv[], char *env[]);
 
 #endif

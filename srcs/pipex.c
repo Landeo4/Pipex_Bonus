@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 09:28:48 by tpotilli          #+#    #+#             */
-/*   Updated: 2023/11/29 10:31:45 by tpotilli         ###   ########.fr       */
+/*   Updated: 2023/11/29 13:15:33 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,46 +37,42 @@
 ** waitpid() wait the end of parent to wait child
 */
 
-// int	ft_pipex(t_pipes *pipes)
-// {
-// 	pid_t	pid[2];
-// 	// int		end[get_nb_pipes(argv)];
-// 	int		status;
-// 	int		i;
-// 	int		nb;
+int	ft_pipex(t_pipes *pipes)
+{
+	// pid_t	pid[2];
+	// int		end[get_nb_pipes(argv)];
+	// int		status;
+	int		i;
 
-// 	nb = get_nb_pipes(argv);
-// 	pipes = malloc(sizeof(pipes) * nb);
-// 	if (!pipes)
-//     	return (-1);
-// 	i = 0;
-// 	while (i < nb)
-// 	{
-// 		if (pipe(pipes[i].pipes) == -1)
-// 		{
-// 			free(pipes);
-// 			return (-1);
-// 		}
-// 		i++;
-// 	}
-// 	i = 0;
-// 	while (i < nb)
-// 	{
-// 		pid[i] = fork();
-// 		if (pid[i] < 0)
-// 			return (1);
-// 		if (pid[i] == 0)
-// 		{
-// 			if (i == 0)
-// 				child_process_start(pipes, );
-// 			else
-// 				child_process_end(pipes, );
-// 		}
-// 		i++;
-// 	}
-// 	return (close(pipes->pipes[0]), close(pipes->pipes[1]), waitpid(pid[1], &status, 0)
-// 		, waitpid(pid[0], &status, 0), 0);
-// }
+	i = 0;
+	while (i < nb)
+	{
+		if (pipe(pipes[i].pipes) == -1)
+		{
+			free(pipes);
+			return (-1);
+		}
+		i++;
+	}
+	i = 0;
+	// while (i < nb)
+	// {
+	// 	pid[i] = fork();
+	// 	if (pid[i] < 0)
+	// 		return (1);
+	// 	if (pid[i] == 0)
+	// 	{
+	// 		if (i == 0)
+	// 			child_process_start(pipes, i);
+	// 		else
+	// 			child_process_end(pipes, i);
+	// 	}
+	// 	i++;
+	// }
+	return (close(pipes->pipes[0]), close(pipes->pipes[1]), 0);
+	// return (close(pipes->pipes[0]), close(pipes->pipes[1]), waitpid(pid[1], &status, 0)
+	// 	, waitpid(pid[0], &status, 0), 0);
+}
 
 int		get_nb_pipes(char **argv)
 {

@@ -6,13 +6,13 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 07:43:30 by tpotilli          #+#    #+#             */
-/*   Updated: 2023/10/05 07:43:53 by tpotilli         ###   ########.fr       */
+/*   Updated: 2023/11/29 12:07:47 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-char	*ft_strdup(const char *s)
+char	*ft_strdup(char *s)
 {
 	int		i;
 	char	*str;
