@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 09:28:48 by tpotilli          #+#    #+#             */
-/*   Updated: 2023/11/29 13:41:56 by tpotilli         ###   ########.fr       */
+/*   Updated: 2023/11/29 14:17:18 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@
 
 int	ft_pipex(char *argv[], char *env[])
 {
-	// pid_t	pid[2];
+	pid_t	pid[2];
 	// int		end[get_nb_pipes(argv)];
-	// int		status;
+	int		status;
 	int		i;
 	int		nb;
 	t_pipes	*pipes;
@@ -63,28 +63,30 @@ int	ft_pipex(char *argv[], char *env[])
 		i++;
 	}
 	i = 0;
-	// while (i < nb)
-	// {
-	// 	pid[i] = fork();
-	// 	if (pid[i] < 0)
-	// 		return (1);
-	// 	if (pid[i] == 0)
-	// 	{
-	// 		if (i == 0)
-	// 			child_process_start(pipes, i);
-	// 		else
-	// 			child_process_end(pipes, i);
-	// 	}
-	// 	i++;
-	// }
-	// free_db_tab(argv);
-	// free_db_tab(pipes->argv);
-	// free_db_tab(pipes->env);
+	while (i < nb)
+	{
+		pid[i] = fork();
+		if (pid[i] < 0)
+			return (1);
+		if (pid[i] == 0)
+		{
+			if (i == 0)
+				child_process_start(pipes, i);
+			else
+				child_process_end(pipes, i);
+		}
+		i++;
+	}
+	// return (close(pipes->pipes[0]), close(pipes->pipes[1]), free(pipes), 0);
+	while (i > 0)
+	{
+		waitpid(pid[i], &status, 0);
+		i--;
+	}
 	return (close(pipes->pipes[0]), close(pipes->pipes[1]), free(pipes), 0);
-	// return (close(pipes->pipes[0]), close(pipes->pipes[1]), waitpid(pid[1], &status, 0)
-	// 	, waitpid(pid[0], &status, 0), 0);
 }
-
+// faire boucle pour waitpid
+// potentiellement integrer mon pipe a ma boucle pid
 int		get_nb_pipes(char **argv)
 {
 	int		i;
