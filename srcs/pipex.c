@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 09:28:48 by tpotilli          #+#    #+#             */
-/*   Updated: 2023/11/29 13:15:33 by tpotilli         ###   ########.fr       */
+/*   Updated: 2023/11/29 13:41:56 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,22 @@
 ** waitpid() wait the end of parent to wait child
 */
 
-int	ft_pipex(t_pipes *pipes)
+int	ft_pipex(char *argv[], char *env[])
 {
 	// pid_t	pid[2];
 	// int		end[get_nb_pipes(argv)];
 	// int		status;
 	int		i;
+	int		nb;
+	t_pipes	*pipes;
 
 	i = 0;
+	nb = get_nb_pipes(argv);
+	pipes = NULL;
+	pipes = init_pipes(pipes, argv, env);
+	if (!pipes)
+		return (-1);
+	printf("je continue normalement\n");
 	while (i < nb)
 	{
 		if (pipe(pipes[i].pipes) == -1)
@@ -69,7 +77,10 @@ int	ft_pipex(t_pipes *pipes)
 	// 	}
 	// 	i++;
 	// }
-	return (close(pipes->pipes[0]), close(pipes->pipes[1]), 0);
+	// free_db_tab(argv);
+	// free_db_tab(pipes->argv);
+	// free_db_tab(pipes->env);
+	return (close(pipes->pipes[0]), close(pipes->pipes[1]), free(pipes), 0);
 	// return (close(pipes->pipes[0]), close(pipes->pipes[1]), waitpid(pid[1], &status, 0)
 	// 	, waitpid(pid[0], &status, 0), 0);
 }
@@ -85,6 +96,55 @@ int		get_nb_pipes(char **argv)
 	nb = i / 2;
 	nb--;
 	return (nb);
+}
+
+t_pipes *init_pipes(t_pipes *pipes, char *argv[], char *env[])
+{
+	int		i;
+	int		nb;
+
+	i = 0;
+	nb = get_nb_pipes(argv);
+	pipes = malloc(sizeof(t_pipes) * nb);
+	if (!pipes)
+    	return (printf("malloc problem\n"), NULL);
+	pipes->fd1 = argv[1];
+	while (argv[i])
+		i++;
+	pipes->fd2 = argv[--i];
+	pipes->argv = argv;
+	pipes->env = env;
+	// show_db_tab(argv);
+	// show_db_tab(env);
+	if (!pipes->argv)
+		return (printf("argv problem\n"), NULL);
+	if (!pipes->env)
+		return (printf("env problem\n"), NULL);
+	printf("donc maintenant tout va bien\n");
+	return (pipes);
+}
+
+void	show_db_tab(char **map)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	printf("la map\n");
+	if (!map)
+		return ;
+	while (map[i])
+	{
+		j = 0;
+		while (map[i][j])
+		{
+			printf("%c", map[i][j]);
+			j++;
+		}
+		printf("\n");
+		i++;
+	}
+	return ;
 }
 
 //end[1] == child process ->write
