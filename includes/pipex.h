@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/10 16:39:00 by tpotilli          #+#    #+#             */
-/*   Updated: 2023/11/29 13:40:25 by tpotilli         ###   ########.fr       */
+/*   Updated: 2023/11/30 11:30:31 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,12 +89,15 @@ char	**ft_get_path(char **env);
 char	*ft_strchr(const char *string, int searchedChar);
 int		not_Path(const char *s1, const char *s2);
 char	*str_join_free(char *path, char *cmd);
-void	child_process_start(t_pipes *pipes, int i);
-void	child_process_end(t_pipes *pipes, int i);
+void	child_process_redirection(t_pipes *pipes, int i);
+void	child_process_in(t_pipes *pipes);
+void	child_process_out(t_pipes *pipes, int i);
+void	child_process_middle(t_pipes *pipes, int i);
 int		get_nb_pipes(char **argv);
 int		cpy_arg(t_pipes *pipes, char *new[]);
 int		cpy_env(t_pipes *pipes, char *new[]);
 t_pipes *init_pipes(t_pipes *pipes, char *argv[], char *env[]);
 void	show_db_tab(char **map);
+int		command_type(t_pipes *pipes, int i);
 
 #endif

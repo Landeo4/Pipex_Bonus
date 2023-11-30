@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 09:28:48 by tpotilli          #+#    #+#             */
-/*   Updated: 2023/11/29 14:17:18 by tpotilli         ###   ########.fr       */
+/*   Updated: 2023/11/30 11:30:41 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,14 @@ int	ft_pipex(char *argv[], char *env[])
 	int		nb;
 	t_pipes	*pipes;
 
-	i = 0;
+	status = 0;
 	nb = get_nb_pipes(argv);
 	pipes = NULL;
 	pipes = init_pipes(pipes, argv, env);
 	if (!pipes)
 		return (-1);
-	printf("je continue normalement\n");
+	printf("avant le while des pipes\n");
+	i = 0;
 	while (i < nb)
 	{
 		if (pipe(pipes[i].pipes) == -1)
@@ -62,18 +63,20 @@ int	ft_pipex(char *argv[], char *env[])
 		}
 		i++;
 	}
-	i = 0;
 	while (i < nb)
 	{
 		pid[i] = fork();
 		if (pid[i] < 0)
 			return (1);
+		// token = command_type(pipes, i);
 		if (pid[i] == 0)
 		{
 			if (i == 0)
-				child_process_start(pipes, i);
+				child_process_in(pipes);
+			else if (i == nb--)
+				child_process_out(pipes, i);
 			else
-				child_process_end(pipes, i);
+				child_process_middle(pipes, i);
 		}
 		i++;
 	}
@@ -85,6 +88,25 @@ int	ft_pipex(char *argv[], char *env[])
 	}
 	return (close(pipes->pipes[0]), close(pipes->pipes[1]), free(pipes), 0);
 }
+
+// int	command_type(t_pipes *pipes, int i)
+// {
+// 	(void)pipes;
+// 	(void)i;
+// 	return (1);
+// }
+
+// int	is_pipe(t_prompt *prompt)
+// {
+// 	int	i;
+
+// 	i = -1;
+// 	while (prompt->input[++i])
+// 		if (prompt->input[i] == '|')
+// 			return (1);
+// 	return (0);
+// }
+
 // faire boucle pour waitpid
 // potentiellement integrer mon pipe a ma boucle pid
 int		get_nb_pipes(char **argv)
@@ -116,8 +138,6 @@ t_pipes *init_pipes(t_pipes *pipes, char *argv[], char *env[])
 	pipes->fd2 = argv[--i];
 	pipes->argv = argv;
 	pipes->env = env;
-	// show_db_tab(argv);
-	// show_db_tab(env);
 	if (!pipes->argv)
 		return (printf("argv problem\n"), NULL);
 	if (!pipes->env)
@@ -152,3 +172,5 @@ void	show_db_tab(char **map)
 //end[1] == child process ->write
 //end[0] == parent process ->read
 //cm1 will be executed by child and cm2 by parent
+
+// gere les redirections
