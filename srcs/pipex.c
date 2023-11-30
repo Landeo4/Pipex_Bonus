@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 09:28:48 by tpotilli          #+#    #+#             */
-/*   Updated: 2023/11/30 11:30:41 by tpotilli         ###   ########.fr       */
+/*   Updated: 2023/11/30 13:28:09 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ int	ft_pipex(char *argv[], char *env[])
 	int		nb;
 	t_pipes	*pipes;
 
-	status = 0;
 	nb = get_nb_pipes(argv);
 	pipes = NULL;
 	pipes = init_pipes(pipes, argv, env);
@@ -54,6 +53,7 @@ int	ft_pipex(char *argv[], char *env[])
 		return (-1);
 	printf("avant le while des pipes\n");
 	i = 0;
+	printf("nb %i\n", nb);
 	while (i < nb)
 	{
 		if (pipe(pipes[i].pipes) == -1)
@@ -63,12 +63,12 @@ int	ft_pipex(char *argv[], char *env[])
 		}
 		i++;
 	}
-	while (i < nb)
+	i = 0;
+	while (nb > 0)
 	{
 		pid[i] = fork();
-		if (pid[i] < 0)
+		if (pid[i] < 0)	
 			return (1);
-		// token = command_type(pipes, i);
 		if (pid[i] == 0)
 		{
 			if (i == 0)
@@ -78,16 +78,37 @@ int	ft_pipex(char *argv[], char *env[])
 			else
 				child_process_middle(pipes, i);
 		}
+		else
+			nb--;
+		waitpid(pid[i], &status, 0);
 		i++;
 	}
+	printf("%i\n", i);
 	// return (close(pipes->pipes[0]), close(pipes->pipes[1]), free(pipes), 0);
-	while (i > 0)
+	while (waitpid(pid[i], &status, 0) && i >= 0)
 	{
-		waitpid(pid[i], &status, 0);
 		i--;
 	}
-	return (close(pipes->pipes[0]), close(pipes->pipes[1]), free(pipes), 0);
+	return (0);
 }
+
+// while (i < nb)
+	// {
+	// 	pid[i] = fork();
+	// 	if (pid[i] < 0)
+	// 		return (1);
+	// 	// token = command_type(pipes, i);
+	// 	if (pid[i] == 0)
+	// 	{
+	// 		if (i == 0)
+	// 			child_process_in(pipes);
+	// 		else if (i == nb--)
+	// 			child_process_out(pipes, i);
+	// 		else
+	// 			child_process_middle(pipes, i);
+	// 	}
+	// 	i++;
+	// }
 
 // int	command_type(t_pipes *pipes, int i)
 // {
@@ -118,7 +139,6 @@ int		get_nb_pipes(char **argv)
 	while (argv[i])
 		i++;
 	nb = i / 2;
-	nb--;
 	return (nb);
 }
 
@@ -129,6 +149,7 @@ t_pipes *init_pipes(t_pipes *pipes, char *argv[], char *env[])
 
 	i = 0;
 	nb = get_nb_pipes(argv);
+	printf("nb %i\n", nb);
 	pipes = malloc(sizeof(t_pipes) * nb);
 	if (!pipes)
     	return (printf("malloc problem\n"), NULL);
