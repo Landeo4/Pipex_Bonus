@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/10 16:39:00 by tpotilli          #+#    #+#             */
-/*   Updated: 2023/11/30 11:30:31 by tpotilli         ###   ########.fr       */
+/*   Updated: 2023/12/04 14:42:27 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,5 +99,6 @@ int		cpy_env(t_pipes *pipes, char *new[]);
 t_pipes *init_pipes(t_pipes *pipes, char *argv[], char *env[]);
 void	show_db_tab(char **map);
 int		command_type(t_pipes *pipes, int i);
+void	free_pipes(t_pipes *pipes, int nb);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 15:58:51 by tpotilli          #+#    #+#             */
-/*   Updated: 2023/11/30 13:07:30 by tpotilli         ###   ########.fr       */
+/*   Updated: 2023/12/04 14:51:05 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,14 @@ void	child_process_in(t_pipes *pipes)
 
 void	child_process_middle(t_pipes *pipes, int i)
 {
-	if (dup2(pipes->pipes[0], STDIN_FILENO) < 0)
+	if (dup2(pipes[i - 1].pipes[0], STDIN_FILENO) < 0)
 		return (close(pipes->pipes[1]), perror("dup2"), exit(errno));
-	if (dup2(pipes->pipes[1], STDOUT_FILENO) < 0)
+	printf("je passe le premier dup2\n");
+	if (dup2(pipes[i].pipes[1], STDOUT_FILENO) < 0)
 		return (close(pipes->pipes[1]), perror("dup2"), exit(errno));
-	close(pipes->pipes[0]);
+	printf("je passe le second dup2\n");
+	close(pipes[i - 1].pipes[0]);
+	close(pipes[i].pipes[1]);
 	ft_do_process(pipes->env, pipes->argv[i]);
 }
 

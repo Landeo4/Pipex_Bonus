@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 09:28:48 by tpotilli          #+#    #+#             */
-/*   Updated: 2023/11/30 13:28:09 by tpotilli         ###   ########.fr       */
+/*   Updated: 2023/12/04 14:54:36 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,43 +51,44 @@ int	ft_pipex(char *argv[], char *env[])
 	pipes = init_pipes(pipes, argv, env);
 	if (!pipes)
 		return (-1);
-	printf("avant le while des pipes\n");
 	i = 0;
 	printf("nb %i\n", nb);
 	while (i < nb)
 	{
 		if (pipe(pipes[i].pipes) == -1)
-		{
-			free(pipes);
-			return (-1);
-		}
+			return (free(pipes), -1);
 		i++;
 	}
 	i = 0;
-	while (nb > 0)
+	while (i < nb)
 	{
 		pid[i] = fork();
 		if (pid[i] < 0)	
 			return (1);
 		if (pid[i] == 0)
 		{
+			printf("dans mon pid = 0 i = %d nb = %d\n", i, nb);
 			if (i == 0)
 				child_process_in(pipes);
-			else if (i == nb--)
+			else if (i == nb)
 				child_process_out(pipes, i);
 			else
+			{
+				printf("je passe par middle\n");
 				child_process_middle(pipes, i);
+			}
 		}
-		else
-			nb--;
-		waitpid(pid[i], &status, 0);
 		i++;
 	}
 	printf("%i\n", i);
+	i = 0;
+	free(pipes);
 	// return (close(pipes->pipes[0]), close(pipes->pipes[1]), free(pipes), 0);
-	while (waitpid(pid[i], &status, 0) && i >= 0)
+	while (i < nb)
 	{
-		i--;
+		printf("je suis dans la boucle waitpid\n");
+		i++;
+		waitpid(pid[i], &status, 0);
 	}
 	return (0);
 }
