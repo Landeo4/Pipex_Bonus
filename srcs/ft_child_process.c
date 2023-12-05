@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 15:58:51 by tpotilli          #+#    #+#             */
-/*   Updated: 2023/12/04 14:51:05 by tpotilli         ###   ########.fr       */
+/*   Updated: 2023/12/05 15:45:05 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	child_process_in(t_pipes *pipes)
 	int	fd;
 
 	close(pipes->pipes[0]);
-	printf("pipes[i].fd1 = %s", pipes[0].fd1);
+	printf("pipes[i].fd1 = %s\n", pipes[0].fd1);
 	fd = ft_create_fd(pipes[0].fd1, O_RDONLY); // trouver nom fichier argv[4]
 	if (fd < 0)
 		return (close(pipes->pipes[1]), exit(errno));
@@ -69,9 +69,10 @@ void	child_process_middle(t_pipes *pipes, int i)
 	printf("je passe le premier dup2\n");
 	if (dup2(pipes[i].pipes[1], STDOUT_FILENO) < 0)
 		return (close(pipes->pipes[1]), perror("dup2"), exit(errno));
-	printf("je passe le second dup2\n");
+	printf("JE PASSE PAR LE SECOND DUP2\n");
 	close(pipes[i - 1].pipes[0]);
 	close(pipes[i].pipes[1]);
+	printf("salut\n");
 	ft_do_process(pipes->env, pipes->argv[i]);
 }
 

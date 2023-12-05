@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 09:28:48 by tpotilli          #+#    #+#             */
-/*   Updated: 2023/12/04 14:54:36 by tpotilli         ###   ########.fr       */
+/*   Updated: 2023/12/05 18:33:41 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,28 +67,34 @@ int	ft_pipex(char *argv[], char *env[])
 			return (1);
 		if (pid[i] == 0)
 		{
-			printf("dans mon pid = 0 i = %d nb = %d\n", i, nb);
+			printf("===\ndans mon pid = 0 i = %d nb = %d\n===\n", i, nb);
 			if (i == 0)
+			{
+				printf("debut de mon PIPex\n");
 				child_process_in(pipes);
+			}
 			else if (i == nb)
+			{
+				printf("fin\n");
 				child_process_out(pipes, i);
+			}
 			else
 			{
 				printf("je passe par middle\n");
 				child_process_middle(pipes, i);
 			}
+			exit(0);
 		}
 		i++;
 	}
-	printf("%i\n", i);
 	i = 0;
 	free(pipes);
 	// return (close(pipes->pipes[0]), close(pipes->pipes[1]), free(pipes), 0);
 	while (i < nb)
 	{
-		printf("je suis dans la boucle waitpid\n");
+		int pid_result = waitpid(pid[i], &status, 0);
+		printf("Attente du processus fils %d, reçu le PID %d\n", pid[i], pid_result);
 		i++;
-		waitpid(pid[i], &status, 0);
 	}
 	return (0);
 }
@@ -131,16 +137,45 @@ int	ft_pipex(char *argv[], char *env[])
 
 // faire boucle pour waitpid
 // potentiellement integrer mon pipe a ma boucle pid
+
+int	found_max(char **argv)
+{
+	int	i;
+
+	while (argv[i])
+		i++;
+	return (i);
+}
+
 int		get_nb_pipes(char **argv)
 {
 	int		i;
-	int		nb;
+	int		cpt;
+	int		c;
 
-	i = 0;
-	while (argv[i])
+	i = ((cpt = 0));
+	c = 0;
+	while (ft_strncmp(argv[i], "./Pipex", 8) != 0)
 		i++;
-	nb = i / 2;
-	return (nb);
+	printf("i = %d\n", i);
+	while (i < found_max(argv))
+	{
+		printf("dans le while i = %d\n", i);
+		printf("la string\n argv[i] = %s\n", argv[i]);
+		if (argv[i][c] == 34)
+		{
+			printf("coucou\n");
+			while (argv[i])
+			{
+				i++;
+				cpt++;
+			}
+		}
+		i++;
+	}
+	printf("i = %d\n", i);
+	printf("j = %d\n", cpt);
+	return (cpt);
 }
 
 t_pipes *init_pipes(t_pipes *pipes, char *argv[], char *env[])
@@ -155,9 +190,13 @@ t_pipes *init_pipes(t_pipes *pipes, char *argv[], char *env[])
 	if (!pipes)
     	return (printf("malloc problem\n"), NULL);
 	pipes->fd1 = argv[1];
+	if (!pipes->fd1)
+		return (printf("fd1 problem\n"), NULL);
 	while (argv[i])
 		i++;
 	pipes->fd2 = argv[--i];
+	if (!pipes->fd2)
+		return (printf("fd2 problem\n"), NULL);
 	pipes->argv = argv;
 	pipes->env = env;
 	if (!pipes->argv)

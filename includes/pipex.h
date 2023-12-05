@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/10 16:39:00 by tpotilli          #+#    #+#             */
-/*   Updated: 2023/12/04 14:42:27 by tpotilli         ###   ########.fr       */
+/*   Updated: 2023/12/05 17:44:45 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,6 @@ void	child_process_in(t_pipes *pipes);
 void	child_process_out(t_pipes *pipes, int i);
 void	child_process_middle(t_pipes *pipes, int i);
 int		get_nb_pipes(char **argv);
-int		cpy_arg(t_pipes *pipes, char *new[]);
-int		cpy_env(t_pipes *pipes, char *new[]);
 t_pipes *init_pipes(t_pipes *pipes, char *argv[], char *env[]);
 void	show_db_tab(char **map);
 int		command_type(t_pipes *pipes, int i);
