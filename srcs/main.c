@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/10 17:00:57 by tpotilli          #+#    #+#             */
-/*   Updated: 2023/11/29 13:38:41 by tpotilli         ###   ########.fr       */
+/*   Updated: 2023/12/13 14:09:40 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,24 @@
 
 int	main(int argc, char *argv[], char *envp[])
 {
+
 	(void)argc;
-	ft_pipex(argv, envp);
+	if (init_before_pipe(argv, envp) == -1)
 		return (-1);
+	return (0);
+}
+
+int	init_before_pipe(char *argv[], char *envp[])
+{
+	t_pipes		*pipes;
+	int			nb;
+
+	nb = get_nb_pipes(argv);
+	fprintf(stderr, "voici le nb %i avant d'inititaliser tout\n", nb);
+	pipes = init_pipes(argv, envp);
+	if (!pipes)
+		return (-1);
+	ft_pipex(pipes, nb);
 	return (0);
 }
 

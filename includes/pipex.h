@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/10 16:39:00 by tpotilli          #+#    #+#             */
-/*   Updated: 2023/12/05 17:44:45 by tpotilli         ###   ########.fr       */
+/*   Updated: 2023/12/13 12:11:16 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ char	*ft_cpy(char const *s1, char const *s2, char *str);
 char	*ft_strjoin(char *s1, char *s2);
 int		ft_strlen_db(char **s, int i);
 void	free_db_tab(char **str);
+int		ft_strcmp(const char *s1, const char *s2);
 
 // =======================================================================
 //								Pipex
@@ -76,7 +77,7 @@ void	free_db_tab(char **str);
 
 int		ft_parsing(int argc);
 int		ft_verif_error(char *buff, int fd[]);
-int		ft_pipex(char *argv[], char *env[]);
+int		ft_pipex(t_pipes *pipes, int nb);
 int		ft_create_fd(char *argv, int flag);
 void	parent_process(int fd4, char *argv[], char *envp[], int *end);
 char	*ft_get_pass(char *argv, char *envp, int i);
@@ -94,9 +95,10 @@ void	child_process_in(t_pipes *pipes);
 void	child_process_out(t_pipes *pipes, int i);
 void	child_process_middle(t_pipes *pipes, int i);
 int		get_nb_pipes(char **argv);
-t_pipes *init_pipes(t_pipes *pipes, char *argv[], char *env[]);
+t_pipes	*init_pipes(char *argv[], char *env[]);
 void	show_db_tab(char **map);
 int		command_type(t_pipes *pipes, int i);
 void	free_pipes(t_pipes *pipes, int nb);
+int		init_before_pipe(char *argv[], char *envp[]);
 
 #endif

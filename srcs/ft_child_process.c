@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 15:58:51 by tpotilli          #+#    #+#             */
-/*   Updated: 2023/12/05 15:45:05 by tpotilli         ###   ########.fr       */
+/*   Updated: 2023/12/13 16:29:06 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,15 +64,26 @@ void	child_process_in(t_pipes *pipes)
 
 void	child_process_middle(t_pipes *pipes, int i)
 {
-	if (dup2(pipes[i - 1].pipes[0], STDIN_FILENO) < 0)
-		return (close(pipes->pipes[1]), perror("dup2"), exit(errno));
-	printf("je passe le premier dup2\n");
-	if (dup2(pipes[i].pipes[1], STDOUT_FILENO) < 0)
-		return (close(pipes->pipes[1]), perror("dup2"), exit(errno));
-	printf("JE PASSE PAR LE SECOND DUP2\n");
+	if (dup2(pipes[i - 1].pipes[0], STDIN_FILENO) < 0) {
+    perror("dup2");
+    printf("Failed to duplicate STDIN\n");
+    exit(errno);
+}
+printf("JE PASSE LE PREMIER DUP2\n");
+
+fflush(stdout);
+
+if (dup2(pipes[i].pipes[1], STDOUT_FILENO) < 0) {
+    perror("dup2");
+    printf("Failed to duplicate STDOUT\n");
+    exit(errno);
+}
+printf("JE PASSE PAR LE SECOND DUP2\n");
+
+fflush(stdout);
+
 	close(pipes[i - 1].pipes[0]);
 	close(pipes[i].pipes[1]);
-	printf("salut\n");
 	ft_do_process(pipes->env, pipes->argv[i]);
 }
 
@@ -90,7 +101,7 @@ void	child_process_out(t_pipes *pipes, int i)
 	if (dup2(fd, STDOUT_FILENO) < 0)
 		return (close(pipes->pipes[0]), close(fd), perror("dup2"), exit(errno));
 	close (fd);
-	printf("argv[--i] = %s", pipes->argv[i - 2]);
+	printf("argv[--i] = %s", pipes->argv[i]);
 	close (pipes->pipes[1]);
 	ft_do_process(pipes->env, pipes->argv[--i]);
 }

@@ -6,7 +6,7 @@
 /*   By: tpotilli <tpotilli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 09:28:48 by tpotilli          #+#    #+#             */
-/*   Updated: 2023/12/05 18:33:41 by tpotilli         ###   ########.fr       */
+/*   Updated: 2023/12/13 18:17:31 by tpotilli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,29 +37,16 @@
 ** waitpid() wait the end of parent to wait child
 */
 
-int	ft_pipex(char *argv[], char *env[])
+int	ft_pipex(t_pipes *pipes, int nb)
 {
 	pid_t	pid[2];
 	// int		end[get_nb_pipes(argv)];
 	int		status;
 	int		i;
-	int		nb;
-	t_pipes	*pipes;
 
-	nb = get_nb_pipes(argv);
-	pipes = NULL;
-	pipes = init_pipes(pipes, argv, env);
+	i = 0;
 	if (!pipes)
 		return (-1);
-	i = 0;
-	printf("nb %i\n", nb);
-	while (i < nb)
-	{
-		if (pipe(pipes[i].pipes) == -1)
-			return (free(pipes), -1);
-		i++;
-	}
-	i = 0;
 	while (i < nb)
 	{
 		pid[i] = fork();
@@ -67,28 +54,26 @@ int	ft_pipex(char *argv[], char *env[])
 			return (1);
 		if (pid[i] == 0)
 		{
-			printf("===\ndans mon pid = 0 i = %d nb = %d\n===\n", i, nb);
 			if (i == 0)
 			{
-				printf("debut de mon PIPex\n");
+				printf("======DEBUT DE MON PIPEX======\n");
 				child_process_in(pipes);
 			}
-			else if (i == nb)
+			else if (i == nb - 1)
 			{
 				printf("fin\n");
 				child_process_out(pipes, i);
+				exit(0);
 			}
 			else
 			{
 				printf("je passe par middle\n");
 				child_process_middle(pipes, i);
 			}
-			exit(0);
 		}
 		i++;
 	}
 	i = 0;
-	free(pipes);
 	// return (close(pipes->pipes[0]), close(pipes->pipes[1]), free(pipes), 0);
 	while (i < nb)
 	{
@@ -96,6 +81,7 @@ int	ft_pipex(char *argv[], char *env[])
 		printf("Attente du processus fils %d, reçu le PID %d\n", pid[i], pid_result);
 		i++;
 	}
+	free(pipes);
 	return (0);
 }
 
@@ -142,6 +128,7 @@ int	found_max(char **argv)
 {
 	int	i;
 
+	i = 0;
 	while (argv[i])
 		i++;
 	return (i);
@@ -151,59 +138,54 @@ int		get_nb_pipes(char **argv)
 {
 	int		i;
 	int		cpt;
-	int		c;
+	int		tmp;
 
 	i = ((cpt = 0));
-	c = 0;
+	tmp = 0;
 	while (ft_strncmp(argv[i], "./Pipex", 8) != 0)
 		i++;
-	printf("i = %d\n", i);
+	i = i + 2;
 	while (i < found_max(argv))
 	{
-		printf("dans le while i = %d\n", i);
-		printf("la string\n argv[i] = %s\n", argv[i]);
-		if (argv[i][c] == 34)
-		{
-			printf("coucou\n");
-			while (argv[i])
-			{
-				i++;
-				cpt++;
-			}
-		}
+		tmp++;
 		i++;
 	}
-	printf("i = %d\n", i);
-	printf("j = %d\n", cpt);
+	cpt = tmp - 2;
+	fprintf(stderr, "le nombre de pipe est de %d\n", cpt);
 	return (cpt);
 }
 
-t_pipes *init_pipes(t_pipes *pipes, char *argv[], char *env[])
+t_pipes *init_pipes(char *argv[], char *env[])
 {
-	int		i;
-	int		nb;
+    int			i;
+    int			nb;
+	t_pipes		*pipes;
 
-	i = 0;
-	nb = get_nb_pipes(argv);
-	printf("nb %i\n", nb);
-	pipes = malloc(sizeof(t_pipes) * nb);
-	if (!pipes)
-    	return (printf("malloc problem\n"), NULL);
-	pipes->fd1 = argv[1];
-	if (!pipes->fd1)
-		return (printf("fd1 problem\n"), NULL);
-	while (argv[i])
+    i = 0;
+    nb = get_nb_pipes(argv);
+    fprintf(stderr, "nb %i\n", nb);
+    pipes = malloc(sizeof(t_pipes) * nb);
+    if (!pipes)
+        return (fprintf(stderr, "malloc problem helloooo\n"), NULL);
+    pipes[i].fd1 = argv[1];
+	if (!pipes[i].fd1)
+    	return (printf("fd1 problem\n"), free(pipes), NULL);
+	while (i < nb)
+    {
+        pipes[i].argv = argv;
+        pipes[i].env = env;
+        if (!pipes[i].argv || !pipes[i].env)
+            return (printf("argv or env problem\n"), free(pipes), NULL);
+
+        if (pipe(pipes[i].pipes) == -1)
+            return (printf("pipe problem\n"), free(pipes), NULL);
 		i++;
-	pipes->fd2 = argv[--i];
-	if (!pipes->fd2)
-		return (printf("fd2 problem\n"), NULL);
-	pipes->argv = argv;
-	pipes->env = env;
-	if (!pipes->argv)
-		return (printf("argv problem\n"), NULL);
-	if (!pipes->env)
-		return (printf("env problem\n"), NULL);
-	printf("donc maintenant tout va bien\n");
+    }
+	pipes[i - 1].fd2 = argv[found_max(argv) - 1];
+	printf("len %i\n", ft_strlen(pipes[i - 1].fd2));
+	if (!pipes[i - 1].fd2)
+		return (printf("fd2 problem\n"), free(pipes), NULL);
+    printf("donc maintenant tout va bien\n");
 	return (pipes);
 }
 
